@@ -38,7 +38,7 @@ const Restaurants = (props) => {
         <Row>
           {restaurant.dishes.map((res)=> (
             <Col xs="6" sm="4" key={res.id} style={{ padding: 0}}>
-              <Card style={{ margin: "0 0.5rem 20px 0.5rem" }}>
+              <Card style={{ margin: "0 10px" }}>
                 <CardImg
                   src={`${process.env.NEXT_PUBLIC_API_URL}${res.image.url}`}
                   top={true}
