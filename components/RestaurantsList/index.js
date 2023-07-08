@@ -3,7 +3,6 @@ import { Card, CardBody, CardImg, CardTitle, Col, Row } from 'reactstrap';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 
-
 //id name description image{url} をGQLを使って取り出したい
 const query = gql`
 {
@@ -19,13 +18,14 @@ const query = gql`
 `;
 
 const RestaurantList = (props) => {
-  const { loading, error, data } = useQuery(query);
+  const { error,loading, data } = useQuery(query);
   if(error) return "読み込みに失敗しました"
   if(loading) return <h1>読み込み中・・・</h1>
   if(data){
-    const serchQuery = data.restaurants.filter((restaurant) =>
+    //const serchQueryにdata.restaurantsにfilterをかける。nameがprops.searchにあるか
+    const serchQuery = data.restaurants.filter((restaurant) => (
       restaurant.name.toLowerCase().includes(props.search)
-    );
+    ));
     return (
       <Row>
         {serchQuery .map((res)=>(
@@ -41,8 +41,9 @@ const RestaurantList = (props) => {
                   <CardTitle>{res.description}</CardTitle>
                 </CardBody>
                 <div className="card-footer">
-                  <Link href={`/restaurants/${res.id}`}
-                    as={`/restaurants?id=${res.id}`}
+                  <Link
+                    href={`/restaurants?id=${res.id}`}
+                    as={`/restaurants/${res.id}`}
                   >
                     <a className="btn btn-primary">もっと見る</a>
                   </Link>
