@@ -1,17 +1,21 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
-import { registerUser } from "../lib/auth";
+import { login, registerUser } from "../lib/auth";
 import AppContext from '../context/AppContext';
 
-const register = () => {
+const Login = () => {
   const appContext = useContext(AppContext);
-  const [data, setData] = useState({username: "", email:"", password:""});
+  const [data, setData] = useState({ identifier: "", password:"" });
 
-  const handleRegister = () =>{
-    registerUser(data.username, data.email, data.password).then((res)=>{
-      appContext.setUser({...data});
-    }).catch((err) => console.log(err));
+  const handleLogin = () =>{
+    login(data.identifier,data.password).then((res)=>{
+      appContext.setUser(res.data.user);
+    }).catch((err)=>console.log(err));
   };
+
+  const handleChange = () => {
+    setData({...data,[e.target.name]: e.target.value});
+  }
 
   return (
     <Container>
@@ -19,46 +23,30 @@ const register = () => {
         <Col>
           <div className="paper">
             <div className="header">
-              <h2>ユーザー登録</h2>
+              <h2>ログイン</h2>
             </div>
           </div>
           <section className="wrapper">
             <Form>
                 <fieldset>
-                  {/* ユーザー名を入力したらsetDataに反映される */}
-                  <FormGroup>
-                    <Label>ユーザー名：</Label>
-                    <Input
-                      type="text"
-                      name="username"
-                      style={{height:50, fontSize: "1.2rem" }}
-                      onChange={(e)=>setData(e.target.value)}
-                    />
-                  </FormGroup>
-                </fieldset>
-            </Form>
-            <Form>
-                <fieldset>
-                  {/* メールアドレスを入力したらsetDataに反映される */}
                   <FormGroup>
                     <Label>メールアドレス：</Label>
                     <Input type="email"
-                      name="email"
+                      name="identifier"
                       style={{height:50, fontSize: "1.2rem" }}
-                      onChange={(e)=>setData(e.target.value)}
+                      onChange={(e)=> handleChange(e)}
                     />
                   </FormGroup>
                 </fieldset>
             </Form>
             <Form>
                 <fieldset>
-                  {/* パスワードを入力したらsetDataに反映される */}
                   <FormGroup>
                     <Label>パスワード：</Label>
                     <Input type="password"
                       name="password"
                       style={{height:50, fontSize: "1.2rem" }}
-                      onChange={(e)=>setData(e.target.value)}
+                      onChange={(e)=> handleChange(e)}
                     />
                   </FormGroup>
                   <span>
@@ -69,9 +57,9 @@ const register = () => {
                   <Button
                     style={{ float: "right", width: 120}}
                     color="primary"
-                    onClick={()=>{handleRegister();}}
+                    onClick={()=>{handleLogin();}}
                   >
-                    登録
+                    ログイン
                   </Button>
                 </fieldset>
             </Form>
@@ -97,4 +85,4 @@ const register = () => {
   )
 }
 
-export default register;
+export default Login;
