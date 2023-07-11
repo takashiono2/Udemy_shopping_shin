@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { login, registerUser } from "../lib/auth";
 import AppContext from '../context/AppContext';
@@ -8,12 +8,14 @@ const Login = () => {
   const [data, setData] = useState({ identifier: "", password:"" });
 
   const handleLogin = () =>{
-    login(data.identifier,data.password).then((res)=>{
+    login(data.identifier, data.password).then((res)=>{
       appContext.setUser(res.data.user);
+      // console.log(res.data.user);
     }).catch((err)=>console.log(err));
   };
 
-  const handleChange = () => {
+  //動的にe.target.nameのvalueを受け取って更新
+  const handleChange = (e) => {
     setData({...data,[e.target.name]: e.target.value});
   }
 

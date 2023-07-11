@@ -3,13 +3,14 @@ import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reac
 import { registerUser } from "../lib/auth";
 import AppContext from '../context/AppContext';
 
+//useContextで受け取って、
 const register = () => {
   const appContext = useContext(AppContext);
   const [data, setData] = useState({username: "", email:"", password:""});
 
   const handleRegister = () =>{
     registerUser(data.username, data.email, data.password).then((res)=>{
-      appContext.setUser({...data});
+      appContext.setUser(res.data.user);
     }).catch((err) => console.log(err));
   };
 
