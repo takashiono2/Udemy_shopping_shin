@@ -7,17 +7,20 @@ const Login = () => {
   const appContext = useContext(AppContext);
   const [data, setData] = useState({ identifier: "", password:"" });
 
-  const handleLogin = () =>{
-    login(data.identifier, data.password).then((res)=>{
+  //login（relolve状態）したら、appContextのsetUserを使う、.catch((err)=>console.log(err));
+  const handleLogin = () => {
+    login(data.identifier,data.password)
+    .then((res)=>{
       appContext.setUser(res.data.user);
-      // console.log(res.data.user);
-    }).catch((err)=>console.log(err));
-  };
-
-  //動的にe.target.nameのvalueを受け取って更新
-  const handleChange = (e) => {
-    setData({...data,[e.target.name]: e.target.value});
+    })
+    .catch((err)=>console.log(err));
   }
+
+    //動的にe.target.nameのvalueを受け取って更新
+    const handleChange = (e) =>{
+      setData({...data ,[e.target.name]: e.target.value});
+    }
+
 
   return (
     <Container>
