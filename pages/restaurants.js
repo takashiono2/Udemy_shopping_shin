@@ -31,7 +31,6 @@ const Restaurants = (props) => {
   const { error,loading, data } = useQuery(GET_RESTAURANT_DISHES,{
     variables: { id: router.query.id },
   });
-  console.log(data);
   if(error) return "読み込みに失敗しました"
   if(loading) return <h1>読み込み中・・・</h1>
   if(data){
@@ -53,10 +52,11 @@ const Restaurants = (props) => {
                     <CardTitle>{dish.description}</CardTitle>
                   </CardBody>
                   <div className="card-footer">
+                    {/* ボタンを押した時addItemにdishが入る */}
                   <Button
                     outline
                     color="primary"
-                    onClick={() => appContext.addItem(dish)}
+                    onClick = {()=>addItem(dish)}
                   >
                     + カートに入れる
                   </Button>

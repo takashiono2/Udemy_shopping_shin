@@ -6,6 +6,7 @@ import AppContext from "../../context/AppContext";
 
 
 const Cart = () => {
+//appContextをつかって、cartに値を代入
   const appContext = useContext(AppContext);
   const { cart } = appContext;
   return (
@@ -27,44 +28,49 @@ const Cart = () => {
             <small>料理：</small>
           </div>
           <div>
-            {cart.items ? cart.items.map((item) => {
-              if (item.quantity > 0) {
-                return (
-                  <div className="items-one" style={{ marginBottom: 15 }}>
-                    <div>
-                      <span id="item-price">&nbsp; {item.price}円</span>
-                      <span id="item-name">&nbsp; {item.name}</span>
-                    </div>
-                    <div>
-                      <Button style={{
-                        height: 25,
-                        padding: 0,
-                        width: 15,
-                        marginRight: 5,
-                        marginLeft: 10,
-                      }}
-                        color="link"
-                        onClick={()=>appContext.addItem(item)}
+            {/* cart.itemsがあったらmap関数で展開、なければnull */}
+            {cart.items ?
+              cart.items.map((item) => {
+                if (item.quantity > 0) {
+                  return (
+                    <div className="items-one" style={{ marginBottom: 15 }}>
+                      <div>
+                        <span id="item-price">&nbsp; {item.price}円</span>
+                        <span id="item-name">&nbsp; {item.name}</span>
+                      </div>
+                      <div>
+                        <Button style={{
+                          height: 25,
+                          padding: 0,
+                          width: 15,
+                          marginRight: 5,
+                          marginLeft: 10,
+                        }}
+                          color="link"
+                          onClick={() => appContext.addItem(item)}
                         >
-                        +
-                      </Button>
-                      <Button style={{
-                        height: 25,
-                        padding: 0,
-                        width: 15,
-                        marginRight: 10,
-                      }}
-                        color="link">
-                        -
-                      </Button>
-                      <span id="item-quantity" style={{ marginLeft: 5 }}>
-                        {item.quantity}つ
-                      </span>
+                          +
+                        </Button>
+                        <Button style={{
+                          height: 25,
+                          padding: 0,
+                          width: 15,
+                          marginRight: 10,
+                        }}
+                          color="link"
+                          onClick={() => appContext.removeItem(item)}
+                        >
+                          -
+                        </Button>
+                        <span id="item-quantity" style={{ marginLeft: 5 }}>
+                          {item.quantity}つ
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                );
+                  );
+                }
               }
-            })
+              )
               : null}
           </div>
           <div>
