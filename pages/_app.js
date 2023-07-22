@@ -5,35 +5,35 @@ import Layout from "../components/Layout";
 import withData from "../lib/apollo";
 import AppContext from "../context/AppContext";
 import Cookies from "js-cookie";
-class MyApp extends App{
+class MyApp extends App {
   state = {
     user: null,
     cart: { items: [], total: 0 },
   };
 
-  componentDidMount(){
+  componentDidMount() {
     const token = Cookies.get("token");
     const cart = Cookies.get("cart");
 
-    if(cart !== "undefined" && typeof cart === "string"){
+    if (cart !== "undefined" && typeof cart === "string") {
       JSON.parse(cart).forEach((item) => {
         this.setState({
           cart: {
-            items: cart,
+            items: JSON.parse(cart),
             total: (this.state.cart.total += item.price * item.quantity),
           },
         });
       });
     }
-    if(token){
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`,{
+    if (token) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }).then(async(res)=>{
-        if(!res.ok){
+      }).then(async (res) => {
+        if (!res.ok) {
           Cookies.remove("token");
-          this.setState({ user: null});
+          this.setState({ user: null });
           return null;
         }
         const user = await res.json();
@@ -42,66 +42,57 @@ class MyApp extends App{
     }
   }
 
-  setUser = (user) =>{
-    this.setState({ user })
+  setUser = (user) => {
+    this.setState({ user });
   };
 
   addItem = (item) => {
     let { items } = this.state.cart;
-    //item(追加したアイテム)が一致するものをnewItemとする。findメソッドで引数をiとする
-    const newItem = items.find((i)=>( i.id === item.id ));
-    // もし、newItemがなかったら、そのitemの個数を1とする
-    if(!newItem){
+    const newItem = items.find((i) => i.id === item.id);
+    if (!newItem) {
       item.quantity = 1;
-    //stateの状態を更新する。totalには、item.priceを更新
       this.setState({
         cart: {
           items: [...items, item],
           total: this.state.cart.total + item.price,
         },
       },
-      () => Cookies.set("cart", this.state.cart.items)
+        () => Cookies.set("cart", this.state.cart.items)
       );
     }
     else {
-      //すでに同じ商品が入っている時、
-      //stateの状態を更新する。map関数でnewItem.idが一致したら
-      //Object.assignを使ってクローン、 quantity: item.quantity + 1 そうでない場合はそのままitem
-      //totalには、item.priceを更新
       this.setState({
         cart: {
           items: this.state.cart.items.map((item) =>
             item.id === newItem.id
-              ? Object.assign({}, item, item.quantity + 1)
+              ? Object.assign({}, item, { quantity: item.quantity + 1 })
               : item
           ),
           total: this.state.cart.total + item.price,
         },
       },
-      () => Cookies.set("cart", this.state.cart.items)
+        () => Cookies.set("cart", this.state.cart.items)
       );
     }
   };
 
   removeItem = (item) => {
     let { items } = this.state.cart;
-    const newItem = item.find((i)=> i.id === item.id);
-    if(newItem.quantity > 1){
+    const newItem = items.find((i) => i.id === item.id);
+    if (newItem.quantity > 1) {
       this.setState({
         cart: {
-          items: this.state.cart.items.map((item)=>
+          items: this.state.cart.items.map((item) =>
             item.id === newItem.id
-            ? Object.assign({},item,{quantity: item.quantity - 1})
-            :item
+              ? Object.assign({}, item, { quantity: item.quantity - 1 })
+              : item
           ),
           total: this.state.cart.total - item.price,
         },
       },
-      () => Cookies.set("cart", this.state.cart.items)
+        () => Cookies.set("cart", this.state.items)
       );
-    }
-    //商品が1つだけの場合
-    else {
+    } else {
       const items = [...this.state.cart.items];
       const index = items.findIndex((i) => i.id === newItem.id);
       items.splice(index, 1);
@@ -112,20 +103,19 @@ class MyApp extends App{
             total: this.state.cart.total - item.price,
           },
         },
-        () => Cookies.set("cart", this.state.cart.items)
+        () => Cookies.set("cart", this.state.items)
       );
     }
   };
 
-  //AppContextのvalueを渡す
-  render(){
-    const {Component, pageProps} = this.props;
+  render() {
+    const { Component, pageProps } = this.props;
     return (
       <AppContext.Provider
         value={{
           user: this.state.user,
-          cart: this.state.cart,
           setUser: this.setUser,
+          cart: this.state.cart,
           addItem: this.addItem,
           removeItem: this.removeItem,
         }}

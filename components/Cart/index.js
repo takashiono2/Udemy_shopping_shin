@@ -6,7 +6,7 @@ import AppContext from "../../context/AppContext";
 
 
 const Cart = () => {
-//appContextをつかって、cartに値を代入
+  //appContextをつかって、cartに値を代入
   const appContext = useContext(AppContext);
   const { cart } = appContext;
   return (
@@ -28,14 +28,13 @@ const Cart = () => {
             <small>料理：</small>
           </div>
           <div>
-            {/* cart.itemsがあったらmap関数で展開、なければnull */}
             {cart.items ?
               cart.items.map((item) => {
                 if (item.quantity > 0) {
                   return (
                     <div className="items-one" style={{ marginBottom: 15 }}>
                       <div>
-                        <span id="item-price">&nbsp; {item.price}円</span>
+                        <span id="item-price">&nbsp; ${item.price}</span>
                         <span id="item-name">&nbsp; {item.name}</span>
                       </div>
                       <div>
@@ -46,8 +45,8 @@ const Cart = () => {
                           marginRight: 5,
                           marginLeft: 10,
                         }}
-                          color="link"
                           onClick={() => appContext.addItem(item)}
+                          color="link"
                         >
                           +
                         </Button>
@@ -57,13 +56,13 @@ const Cart = () => {
                           width: 15,
                           marginRight: 10,
                         }}
-                          color="link"
                           onClick={() => appContext.removeItem(item)}
+                          color="link"
                         >
                           -
                         </Button>
-                        <span id="item-quantity" style={{ marginLeft: 5 }}>
-                          {item.quantity}つ
+                        <span style={{ marginLeft: 5 }} id="item-quantity">
+                          {item.quantity}x
                         </span>
                       </div>
                     </div>

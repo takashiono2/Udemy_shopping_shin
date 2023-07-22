@@ -1,19 +1,28 @@
 import { Col, Row } from "reactstrap";
-import Cart from "../components/Cart/index";
-import CheckOutForm from "../components/CheckOut/CheckOutForm";
+import { Elements } from "@stripe/react-stripe-js";
+import Cart from "../components/cart";
+import CheckoutForm from "../components/checkout/CheckoutForm";
+import { loadStripe } from "@stripe/stripe-js";
 
 const checkout = () => {
+  const stripePromise = loadStripe(
+    "pk_test_51NWWLcLUv0ZrENo0Hgt6PSfGBhkkgf0VKb4NWzzEWMEiBfesquBuJ8lJeBffYtLZz9owcjXiCQ1OINekMDtA14dB002CTaWkew"
+  )
   return (
     <Row>
-      <Col>
-        <h1>チェックアウト</h1>
+      <Col style={{ paddingRight: 0 }} sm={{ size: 3, order: 1, offset: 2 }}>
+        <h1 style={{ margin: 20, fontSize: 20, textAlign: "center" }}>
+          チェックアウト
+        </h1>
         <Cart />
       </Col>
-      <Col>
-        <CheckOutForm />
+      <Col style={{ paddingLeft: 5 }} sm={{ size: 6, order: 2 }}>
+        <Elements stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>
       </Col>
     </Row>
-  )
+  );
 };
 
-export default checkout
+export default checkout;
